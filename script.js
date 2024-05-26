@@ -9,4 +9,6 @@ request = new XMLHttpRequest();
 request.open('GET', 'https://restcountries.com/v2/name/india');
 request.send();
 
-request.addEventListener('load', function () {});
+request.addEventListener('load', function () {
+  const data = this.responseText;
+});
