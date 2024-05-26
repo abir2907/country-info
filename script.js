@@ -10,5 +10,5 @@ request.open('GET', 'https://restcountries.com/v2/name/india');
 request.send();
 
 request.addEventListener('load', function () {
-  const data = this.responseText;
+  const data = JSON.parse(this.responseText);
 });
