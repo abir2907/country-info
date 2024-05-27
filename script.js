@@ -26,27 +26,28 @@ const renderError = function (msg) {
   countriesContainer.insertAdjacentText('beforeend', msg);
 };
 
+const getJSON = function (url, errorMsg = 'Something went wrong') {
+  return fetch(url).then(response => {
+    if (!response.ok) throw new Error(`${errorMsg} (${response.status})`);
+    return response.json();
+  });
+};
+
 const getCountryData = function (country) {
   // Country 1
-  fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`)
-    .then(response => {
-      if (!response.ok)
-        throw new Error(`Country not found (${response.status})`);
-      return response.json();
-    })
+  getJSON(
+    `https://countries-api-836d.onrender.com/countries/name/${country}`,
+    'Country not found'
+  )
     .then(data => {
       renderCountry(data[0]);
 
       // Country 2
       const neighbour = data[0].borders?.[0];
-      return fetch(
-        `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`
+      return getJSON(
+        `https://countries-api-836d.onrender.com/countries/alpha/${neighbour}`,
+        'Country not found'
       );
-    })
-    .then(response => {
-      if (!response.ok)
-        throw new Error(`Country not found (${response.status})`);
-      return response.json();
     })
     .then(data => renderCountry(data, 'neighbour'))
     .catch(err => {
@@ -57,5 +58,5 @@ const getCountryData = function (country) {
 };
 
 btn.addEventListener('click', function () {
-  getCountryData('efefef');
+  getCountryData('portugal');
 });
