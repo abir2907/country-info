@@ -29,7 +29,11 @@ const renderError = function (msg) {
 const getCountryData = function (country) {
   // Country 1
   fetch(`https://countries-api-836d.onrender.com/countries/name/${country}`)
-    .then(response => response.json())
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Country not found (${response.status})`);
+      return response.json();
+    })
     .then(data => {
       renderCountry(data[0]);
 
@@ -49,5 +53,5 @@ const getCountryData = function (country) {
 };
 
 btn.addEventListener('click', function () {
-  getCountryData('france');
+  getCountryData('efefef');
 });
