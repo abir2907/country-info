@@ -60,3 +60,18 @@ const getCountryData = function (country) {
 btn.addEventListener('click', function () {
   getCountryData('portugal');
 });
+
+const whereAmI = function (lat, lng) {
+  fetch(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
+  )
+    .then(response => {
+      if (!response.ok)
+        throw new Error(`Problem with geocoding (${response.status})`);
+      return response.json();
+    })
+    .then(data => getCountryData(data.countryName))
+    .catch(err => console.error(`${err.message} 💥💥`));
+};
+
+whereAmI(52.508, 13.381);
