@@ -57,14 +57,22 @@ const getCountryData = function (country) {
     .finally(() => (countriesContainer.style.opacity = 1));
 };
 
-btn.addEventListener('click', function () {
-  getCountryData('portugal');
-});
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
 
-const whereAmI = function (lat, lng) {
-  fetch(
-    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
-  )
+const whereAmI = function () {
+  getPosition()
+    .then(pos => {
+      const { latitude: lat, longitude: lng } = pos.coords;
+
+      return fetch(
+        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
+      );
+    })
+
     .then(response => {
       if (!response.ok)
         throw new Error(`Problem with geocoding (${response.status})`);
@@ -74,8 +82,4 @@ const whereAmI = function (lat, lng) {
     .catch(err => console.error(`${err.message} 💥💥`));
 };
 
-const getPosition = function () {
-  return new Promise(function (resolve, reject) {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-};
+btn.addEventListener('click', whereAmI);
