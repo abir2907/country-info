@@ -74,4 +74,8 @@ const whereAmI = function (lat, lng) {
     .catch(err => console.error(`${err.message} 💥💥`));
 };
 
-whereAmI(52.508, 13.381);
+const getPosition = function () {
+  return new Promise(function (resolve, reject) {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+};
