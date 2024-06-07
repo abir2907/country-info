@@ -78,7 +78,13 @@ const whereAmI = async function () {
     const dataGeo = await resGeo.json();
 
     // Country data
-    getCountryData(dataGeo.countryName);
+    const res = await fetch(
+      `https://countries-api-836d.onrender.com/countries/name/${dataGeo.countryName}`
+    );
+    if (!res.ok) throw new Error('Problem getting country');
+
+    const data = await res.json();
+    renderCountry(data[0]);
   } catch (err) {
     renderError(`💥 ${err.message}`);
   }
