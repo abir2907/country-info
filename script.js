@@ -63,23 +63,19 @@ const getPosition = function () {
   });
 };
 
-const whereAmI = function () {
-  getPosition()
-    .then(pos => {
-      const { latitude: lat, longitude: lng } = pos.coords;
+const whereAmI = async function () {
+  // Geolocation
+  const pos = await getPosition();
+  const { latitude: lat, longitude: lng } = pos.coords;
 
-      return fetch(
-        `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
-      );
-    })
+  // Reverse geocoding
+  const resGeo = await fetch(
+    `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lng}`
+  );
+  const dataGeo = await resGeo.json();
 
-    .then(response => {
-      if (!response.ok)
-        throw new Error(`Problem with geocoding (${response.status})`);
-      return response.json();
-    })
-    .then(data => getCountryData(data.countryName))
-    .catch(err => console.error(`${err.message} 💥💥`));
+  // Country data
+  getCountryData(dataGeo.countryName);
 };
 
 btn.addEventListener('click', whereAmI);
